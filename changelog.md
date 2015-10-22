@@ -1,3 +1,11 @@
+## v0.5
+
+2015-10-22
+
+* Update to NGINX 1.9.5
+* Build with HTTP/2 module
+* Build with SSL support
+
 ## v0.4
 
 2012-05-13

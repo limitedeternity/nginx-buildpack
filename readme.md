@@ -8,8 +8,8 @@ Some application servers (e.g. Ruby's Unicorn) halt progress when dealing with n
 
 ## Versions
 
-* Buildpack Version: 0.4
-* NGINX Version: 1.5.7
+* Buildpack Version: 0.5
+* NGINX Version: 1.9.5
 
 ## Requirements
 
@@ -26,6 +26,8 @@ Some application servers (e.g. Ruby's Unicorn) halt progress when dealing with n
 * Language/App Server agnostic.
 * Customizable NGINX config.
 * Application coordinated dyno starts.
+* Support for HTTP/2
+* Support for SSL
 
 ### Logging
 
