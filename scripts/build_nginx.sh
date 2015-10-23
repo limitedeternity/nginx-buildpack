@@ -5,7 +5,7 @@
 # This file modified from fork: https://github.com/theoephraim/nginx-buildpack.git
 
 NGINX_VERSION=1.9.5
-PCRE_VERSION=8.33
+PCRE_VERSION=8.37
 OPENSSL_VERSION=1.0.1p
 
 nginx_tarball_url=http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz
