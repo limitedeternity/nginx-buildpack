@@ -30,20 +30,20 @@ cd $temp_dir
 echo "Temp dir: $temp_dir"
 
 echo "Downloading $nginx_tarball_url"
-curl $nginx_tarball_url | tar xf -
+curl $nginx_tarball_url | tar xzf -
 
 echo "Downloading $pcre_tarball_url"
-(cd nginx-${NGINX_VERSION} && curl $pcre_tarball_url | tar xf -)
+(cd nginx-${NGINX_VERSION} && curl $pcre_tarball_url | tar xzf -)
 
 echo "Downloading $openssl_tarball_url"
-(cd nginx-${NGINX_VERSION} && curl $openssl_tarball_url | tar xf -)
+(cd nginx-${NGINX_VERSION} && curl $openssl_tarball_url | tar xzf -)
 
 vulcan build -o ${vulcan_archive_result} -s nginx-${NGINX_VERSION} -v -p /tmp/nginx -c "./configure --with-http_ssl_module --with-http_v2_module --with-openssl=openssl-${OPENSSL_VERSION} --with-pcre=pcre-${PCRE_VERSION} --prefix=/tmp/nginx && make install"
 
 echo "Extracting the nginx binary into the buildback"
 mkdir -p $untarring_dir
 cd $untarring_dir
-tar -xf $vulcan_archive_result
+tar -xzf $vulcan_archive_result
 mkdir -p $nginx_binary_drop_dir
 cp sbin/nginx $nginx_binary_drop_dir
 
