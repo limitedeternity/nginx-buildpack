@@ -9,7 +9,8 @@ PCRE_VERSION=8.33
 OPENSSL_VERSION=1.0.1p
 
 nginx_tarball_url=http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz
-pcre_tarball_url=http://garr.dl.sourceforge.net/project/pcre/pcre/${PCRE_VERSION}/pcre-${PCRE_VERSION}.tar.bz2
+# pcre_tarball_url=http://garr.dl.sourceforge.net/project/pcre/pcre/${PCRE_VERSION}/pcre-${PCRE_VERSION}.tar.bz2
+pcre_tarball_url=ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-${PCRE_VERSION}.tar.gz
 openssl_tarball_url=http://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz
 
 temp_dir=$(mktemp -d /tmp/vulcan_nginx.XXXXXXXXXX)
@@ -33,7 +34,7 @@ echo "Downloading $nginx_tarball_url"
 curl $nginx_tarball_url | tar xzf -
 
 echo "Downloading $pcre_tarball_url"
-(cd nginx-${NGINX_VERSION} && curl $pcre_tarball_url | tar xzf -)
+(cd nginx-${NGINX_VERSION} && curl -OL $pcre_tarball_url | tar xzf -)
 
 echo "Downloading $openssl_tarball_url"
 (cd nginx-${NGINX_VERSION} && curl $openssl_tarball_url | tar xzf -)
