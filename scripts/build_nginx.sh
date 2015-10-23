@@ -34,7 +34,7 @@ echo "Downloading $nginx_tarball_url"
 curl $nginx_tarball_url | tar xzf -
 
 echo "Downloading $pcre_tarball_url"
-(cd nginx-${NGINX_VERSION} && curl -OL $pcre_tarball_url | tar xzf -)
+(cd nginx-${NGINX_VERSION} && curl $pcre_tarball_url | tar xzf -)
 
 echo "Downloading $openssl_tarball_url"
 (cd nginx-${NGINX_VERSION} && curl $openssl_tarball_url | tar xzf -)
