@@ -41,7 +41,7 @@ echo "Downloading $openssl_tarball_url"
 (cd nginx-${NGINX_VERSION} && curl $openssl_tarball_url | tar xzf -)
 
 echo "Building NGINX-$NGINX_VERSION"
-(cd nginx-${NGINX_VERSION} && ./configure --with-http_ssl_module --with-openssl=openssl-${OPENSSL_VERSION} --with-pcre=pcre-${PCRE_VERSION} && make)
+(cd nginx-${NGINX_VERSION} && ./configure --with-http_ssl_module --with-http_v2_module --with-openssl=openssl-${OPENSSL_VERSION} --with-pcre=pcre-${PCRE_VERSION} && make)
 
 echo "Nginx binary can be found at $temp_dir/nginx-$NGINX_VERSION/objs/nginx"
 echo "Create a git build branch, copy the nginx file, commit, and push"
