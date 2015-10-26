@@ -1,6 +1,8 @@
 # Heroku Buildpack: NGINX
 
-Nginx-buildpack vendors NGINX inside a dyno and connects NGINX to an app server via UNIX domain sockets.
+Nginx-buildpack vendors NGINX inside a dyno and connects NGINX to an app server via UNIX domain sockets. Forked from [https://github.com/ryandotsmith/nginx-buildpack](https://github.com/ryandotsmith/nginx-buildpack) with modifications also applied from [https://github.com/theoephraim/nginx-buildpack.git](https://github.com/theoephraim/nginx-buildpack.git). This fork supports SSL and HTTP/2.
+
+This buildpack currently installs NGINX version 1.9.5. See the section below for instructions on how to update the buildpack with a different NGINX version.
 
 ## Motivation
 
@@ -69,9 +71,22 @@ $ heroku config:set NGINX_WORKERS=8
 
 You can provide your own NGINX config by creating a file named `nginx.conf.erb` in the config directory of your app. Start by copying the buildpack's [default config file](https://github.com/ryandotsmith/nginx-buildpack/blob/master/config/nginx.conf.erb).
 
-### Customizable NGINX Compile Options
+### Building NGINX for Heroku
 
 See [scripts/build_nginx.sh](scripts/build_nginx.sh) for the build steps. Configuring is as easy as changing the "./configure" options.
+
+To build a Heroku-compatible nginx binary, follow these steps:
+
+1. heroku run bash --app [application]
+2. mkdir build
+3. cd build
+4. git clone https://github.com/componentkitchen/nginx-buildpack.git
+5. cd nginx-buildpacks/scripts
+6. ./build_nginx.sh
+
+The resulting nginx binary can be found in /tmp/heroku_nginx.XXXXXXXXXX/nginx-$NGINX_VERSION/objs/nginx where XXXXXXXXXX is system-generated and $NGINX_VERSION is the version of nginx being built.
+
+The newly built nginx binary can be copied to /app/build/nginx-buildpack/bin/, committed, then pushed. Consider creating a git branch rather than pushing to master.
 
 ### Application/Dyno coordination
 
