@@ -42,9 +42,6 @@ pwd
 echo "Downloading $openssl_tarball_url"
 (cd nginx-${NGINX_VERSION} && curl $openssl_tarball_url | tar xzf -)
 
-#echo "Configuring OpenSSL for 64-bit Darwin..."
-#(cd nginx-${NGINX_VERSION}/openssl-${OPENSSL_VERSION} && ./Configure darwin64-x86_64-cc)
-
 echo "Building NGINX-$NGINX_VERSION"
 (cd nginx-${NGINX_VERSION} && ./configure --with-http_ssl_module --with-http_v2_module --with-openssl=openssl-${OPENSSL_VERSION} --with-pcre=pcre-${PCRE_VERSION} && make)
 
