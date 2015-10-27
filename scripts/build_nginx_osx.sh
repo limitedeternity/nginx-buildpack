@@ -1,6 +1,8 @@
 #!/bin/bash
 # Build NGINX and modules on Heroku.
 
+export KERNEL_BITS=64
+
 NGINX_VERSION=1.9.5
 PCRE_VERSION=8.37
 OPENSSL_VERSION=1.0.1p
@@ -33,10 +35,15 @@ echo "Downloading $pcre_tarball_url"
 (cd nginx-${NGINX_VERSION} && curl $pcre_tarball_url | tar xzf -)
 
 echo "Building PCRE"
+pwd
 (cd nginx-${NGINX_VERSION}/pcre-${PCRE_VERSION} && ./configure && make)
+pwd
 
 echo "Downloading $openssl_tarball_url"
 (cd nginx-${NGINX_VERSION} && curl $openssl_tarball_url | tar xzf -)
+
+#echo "Configuring OpenSSL for 64-bit Darwin..."
+#(cd nginx-${NGINX_VERSION}/openssl-${OPENSSL_VERSION} && ./Configure darwin64-x86_64-cc)
 
 echo "Building NGINX-$NGINX_VERSION"
 (cd nginx-${NGINX_VERSION} && ./configure --with-http_ssl_module --with-http_v2_module --with-openssl=openssl-${OPENSSL_VERSION} --with-pcre=pcre-${PCRE_VERSION} && make)
