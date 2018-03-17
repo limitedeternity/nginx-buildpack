@@ -1,8 +1,6 @@
 # Heroku Buildpack: NGINX
 
-Nginx-buildpack vendors NGINX inside a dyno and connects NGINX to an app server via UNIX domain sockets. Forked from [https://github.com/ryandotsmith/nginx-buildpack](https://github.com/ryandotsmith/nginx-buildpack) with modifications also applied from [https://github.com/theoephraim/nginx-buildpack.git](https://github.com/theoephraim/nginx-buildpack.git). This fork supports SSL and HTTP/2.
-
-This buildpack currently installs NGINX version 1.9.5. See the section below for instructions on how to update the buildpack with a different NGINX version.
+Nginx-buildpack vendors NGINX inside a dyno and connects NGINX to an app server via UNIX domain sockets. Forked from [https://github.com/ryandotsmith/nginx-buildpack](https://github.com/ryandotsmith/nginx-buildpack) with modifications also applied from [https://github.com/theoephraim/nginx-buildpack.git](https://github.com/theoephraim/nginx-buildpack.git).
 
 ## Motivation
 
@@ -10,8 +8,8 @@ Some application servers (e.g. Ruby's Unicorn) halt progress when dealing with n
 
 ## Versions
 
-* Buildpack Version: 0.5
-* NGINX Version: 1.9.5
+* Buildpack Version: 0.6
+* NGINX Version: 1.13.9
 
 ## Requirements
 
@@ -30,6 +28,7 @@ Some application servers (e.g. Ruby's Unicorn) halt progress when dealing with n
 * Application coordinated dyno starts.
 * Support for HTTP/2
 * Support for SSL
+* Uses headers_more
 
 ### Logging
 
@@ -69,7 +68,7 @@ $ heroku config:set NGINX_WORKERS=8
 
 ### Customizable NGINX Config
 
-You can provide your own NGINX config by creating a file named `nginx.conf.erb` in the config directory of your app. Start by copying the buildpack's [default config file](https://github.com/ryandotsmith/nginx-buildpack/blob/master/config/nginx.conf.erb).
+You can provide your own NGINX config by creating a file named `nginx.conf.erb` in the config directory of your app. Start by copying the buildpack's [default config file](https://github.com/limitedeternity/nginx-buildpack/blob/master/config/nginx.conf.erb).
 
 ### Building NGINX for Heroku
 
@@ -80,7 +79,7 @@ To build a Heroku-compatible nginx binary, follow these steps:
 1. heroku run bash --app [application]
 2. mkdir build
 3. cd build
-4. git clone https://github.com/componentkitchen/nginx-buildpack.git
+4. git clone <REPO>
 5. cd nginx-buildpacks/scripts
 6. ./build_nginx.sh
 
@@ -88,108 +87,18 @@ The resulting nginx binary can be found in /tmp/heroku_nginx.XXXXXXXXXX/nginx-$N
 
 The newly built nginx binary can be copied to /app/build/nginx-buildpack/bin/, committed, then pushed. Consider creating a git branch rather than pushing to master.
 
-### Building NGINX for OS X
-
-You can build a version of NGINX for OS X by running the script, /scripts/build_nginx_osx.sh. This is useful for local testing.
-
 ### Application/Dyno coordination
 
 The buildpack will not start NGINX until a file has been written to `/tmp/app-initialized`. Since NGINX binds to the dyno's $PORT and since the $PORT determines if the app can receive traffic, you can delay NGINX accepting traffic until your application is ready to handle it. The examples below show how/when you should write the file when working with Unicorn.
 
 ## Setup
 
-Here are 2 setup examples. One example for a new app, another for an existing app. In both cases, we are working with ruby & unicorn. Keep in mind that this buildpack is not ruby specific.
-
 ### Existing App
 
-Update Buildpacks
-```bash
-$ heroku config:set BUILDPACK_URL=https://github.com/ddollar/heroku-buildpack-multi.git
-$ echo 'https://github.com/ryandotsmith/nginx-buildpack.git' >> .buildpacks
-$ echo 'https://codon-buildpacks.s3.amazonaws.com/buildpacks/heroku/ruby.tgz' >> .buildpacks
-$ git add .buildpacks
-$ git commit -m 'Add multi-buildpack'
-```
-Update Procfile:
+1. Update Buildpacks.
+
+2. Update Procfile:
+
 ```
 web: bin/start-nginx bundle exec unicorn -c config/unicorn.rb
 ```
-```bash
-$ git add Procfile
-$ git commit -m 'Update procfile for NGINX buildpack'
-```
-Update Unicorn Config
-```ruby
-require 'fileutils'
-listen '/tmp/nginx.socket'
-before_fork do |server,worker|
-	FileUtils.touch('/tmp/app-initialized')
-end
-```
-```bash
-$ git add config/unicorn.rb
-$ git commit -m 'Update unicorn config to listen on NGINX socket.'
-```
-Deploy Changes
-```bash
-$ git push heroku master
-```
-
-### New App
-
-```bash
-$ mkdir myapp; cd myapp
-$ git init
-```
-
-**Gemfile**
-```ruby
-source 'https://rubygems.org'
-gem 'unicorn'
-```
-
-**config.ru**
-```ruby
-run Proc.new {[200,{'Content-Type' => 'text/plain'}, ["hello world"]]}
-```
-
-**config/unicorn.rb**
-```ruby
-require 'fileutils'
-preload_app true
-timeout 5
-worker_processes 4
-listen '/tmp/nginx.socket', backlog: 1024
-
-before_fork do |server,worker|
-	FileUtils.touch('/tmp/app-initialized')
-end
-```
-Install Gems
-```bash
-$ bundle install
-```
-Create Procfile
-```
-web: bin/start-nginx bundle exec unicorn -c config/unicorn.rb
-```
-Create & Push Heroku App:
-```bash
-$ heroku create --buildpack https://github.com/ddollar/heroku-buildpack-multi.git
-$ echo 'https://codon-buildpacks.s3.amazonaws.com/buildpacks/heroku/ruby.tgz' >> .buildpacks
-$ echo 'https://github.com/ryandotsmith/nginx-buildpack.git' >> .buildpacks
-$ git add .
-$ git commit -am "init"
-$ git push heroku master
-$ heroku logs -t
-```
-Visit App
-```
-$ heroku open
-```
-
-## License
-Copyright (c) 2013 Ryan R. Smith
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

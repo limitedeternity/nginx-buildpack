@@ -1,3 +1,12 @@
+## v0.6
+
+2018-03-17
+
+* Bump NGINX to 1.13.9
+* Bump OpenSSL to 1.1.0g
+* Bump PCRE to 8.38
+* Build with headers_more module
+
 ## v0.5
 
 2015-10-22
