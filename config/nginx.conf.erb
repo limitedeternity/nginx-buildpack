@@ -46,9 +46,10 @@ http {
 
 			proxy_hide_header Cache-Control;
             proxy_hide_header Expires;
-            proxy_hide_header Vary;
+			proxy_hide_header Vary;
 			proxy_ignore_headers Vary Expires Cache-Control;
 
+			more_clear_headers Server;
 			add_header Cache-Control "private";
 
 			proxy_redirect off;
