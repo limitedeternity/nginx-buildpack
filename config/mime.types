@@ -3,12 +3,6 @@ types {
     text/html                             html htm shtml;
     text/css                              css;
     text/xml                              xml;
-    image/gif                             gif;
-    image/jpeg                            jpeg jpg;
-    application/x-javascript              js;
-    application/atom+xml                  atom;
-    application/rss+xml                   rss;
-
     text/mathml                           mml;
     text/plain                            txt;
     text/vnd.sun.j2me.app-descriptor      jad;
@@ -19,11 +13,17 @@ types {
     image/png                             png;
     image/tiff                            tif tiff;
     image/vnd.wap.wbmp                    wbmp;
+    image/webp                            webp;
     image/x-icon                          ico;
     image/x-jng                           jng;
     image/x-ms-bmp                        bmp;
     image/svg+xml                         svg;
+    image/gif                             gif;
+    image/jpeg                            jpeg jpg;
 
+    application/javascript                js;
+    application/atom+xml                  atom;
+    application/rss+xml                   rss;
     application/java-archive              jar war ear;
     application/mac-binhex40              hqx;
     application/msword                    doc;
